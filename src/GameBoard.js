@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 function GameBoard() {
+	const [currentPlayer, setCurrentPlayer] = useState(true);
 	const [board, setBoard] = useState([
 		[null, null, null, null, null, null, null],
 		[null, null, null, null, null, null, null],
@@ -13,37 +14,38 @@ function GameBoard() {
 	function addToColumn(column) {
 		let newBoard = [...board];
 		let i = 5;
-		if (newBoard[i][column] != null) {
-			console.log('y');
-		}
 		while (newBoard[i][column] != null) {
 			i--;
 			if (i === -1) {
 				return null;
 			}
 		}
-		newBoard[i][column] = 'x';
+		newBoard[i][column] = currentPlayer ? 'x' : 'o';
+		setCurrentPlayer(!currentPlayer);
 		setBoard(newBoard);
 	}
 
 	return (
-		<div className="board">
-			{board.map((row) => {
-				return (
-					<div className="row">
-						{row.map((space, index) => {
-							return (
-								<div
-									className={space === 'x' ? 'column x' : space === 'y' ? 'column y' : 'column'}
-									onClick={() => {
-										addToColumn(index);
-									}}
-								></div>
-							);
-						})}
-					</div>
-				);
-			})}
+		<div className="game">
+			<div className="board">
+				{board.map((row) => {
+					return (
+						<div className="row">
+							{row.map((space, index) => {
+								return (
+									<div
+										className={space === 'x' ? 'column x' : space === 'o' ? 'column o' : 'column'}
+										onClick={() => {
+											addToColumn(index);
+										}}
+									></div>
+								);
+							})}
+						</div>
+					);
+				})}
+			</div>
+			<h1>Player {currentPlayer ? '1' : '2'}'s turn</h1>
 		</div>
 	);
 }

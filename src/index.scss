@@ -8,7 +8,7 @@
 	}
 
 	.x::after,
-	.y::after {
+	.o::after {
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -17,7 +17,7 @@
 	.x::after {
 		content: 'x';
 	}
-	.y::after {
-		content: 'y';
+	.o::after {
+		content: 'o';
 	}
 }
