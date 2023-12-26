@@ -1,0 +1,23 @@
+.row {
+	display: flex;
+
+	.column {
+		width: 40px;
+		height: 40px;
+		border: 1px solid black;
+	}
+
+	.x::after,
+	.y::after {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
+	}
+	.x::after {
+		content: 'x';
+	}
+	.y::after {
+		content: 'y';
+	}
+}
