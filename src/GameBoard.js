@@ -21,6 +21,7 @@ function GameBoard() {
 			[null, null, null, null, null, null, null],
 			[null, null, null, null, null, null, null],
 		]);
+		setCurrentPlayer(true);
 		setGameStatus(true);
 	}
 
