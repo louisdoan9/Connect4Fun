@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 function GameBoard() {
 	const [currentPlayer, setCurrentPlayer] = useState(true);
+	const [gameStatus, setGameStatus] = useState(true);
 	const [board, setBoard] = useState([
 		[null, null, null, null, null, null, null],
 		[null, null, null, null, null, null, null],
@@ -11,7 +12,22 @@ function GameBoard() {
 		[null, null, null, null, null, null, null],
 	]);
 
+	function resetBoard() {
+		setBoard([
+			[null, null, null, null, null, null, null],
+			[null, null, null, null, null, null, null],
+			[null, null, null, null, null, null, null],
+			[null, null, null, null, null, null, null],
+			[null, null, null, null, null, null, null],
+			[null, null, null, null, null, null, null],
+		]);
+		setGameStatus(true);
+	}
+
 	function addToColumn(column) {
+		if (!gameStatus) {
+			return;
+		}
 		let newBoard = [...board];
 		let i = 5;
 		while (newBoard[i][column] != null) {
@@ -21,9 +37,12 @@ function GameBoard() {
 			}
 		}
 		newBoard[i][column] = currentPlayer ? 'x' : 'o';
-		setCurrentPlayer(!currentPlayer);
 		setBoard(newBoard);
-		checkWin();
+		if (checkWin()) {
+			setGameStatus(false);
+		} else {
+			setCurrentPlayer(!currentPlayer);
+		}
 	}
 
 	function checkEqual(a, b, c, d) {
@@ -122,6 +141,8 @@ function GameBoard() {
 				})}
 			</div>
 			<h1>Player {currentPlayer ? '1' : '2'}'s turn</h1>
+			{!gameStatus ? <h2>{currentPlayer ? 'Player 1' : 'Player 2'} Won</h2> : ''}
+			<h3 onClick={resetBoard}>Reset</h3>
 		</div>
 	);
 }
