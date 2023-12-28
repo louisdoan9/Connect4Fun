@@ -1,6 +1,6 @@
 import supabase from '../supabaseClient';
 
-function Login() {
+function Login({ setUserInfo }) {
 	async function handleSubmit(event) {
 		event.preventDefault();
 		const username = event.target.elements.username.value;
@@ -11,7 +11,11 @@ function Login() {
 			.select()
 			.eq('username', username)
 			.eq('password', password);
+
 		console.log(data);
+		if (data.length !== 0) {
+			setUserInfo(data);
+		}
 		event.target.elements.username.value = '';
 		event.target.elements.password.value = '';
 	}

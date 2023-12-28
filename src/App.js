@@ -1,21 +1,21 @@
 import GameBoard from './GameBoard';
-import supabase from './supabaseClient';
 import Register from './Authentication/Register';
 import Login from './Authentication/Login';
+import { useState } from 'react';
 
 function App() {
-	async function handleSubmit() {
-		const { data, error } = await supabase.from('users').insert([{ username: 'user', password: 'pass' }]);
-	}
+	const [userInfo, setUserInfo] = useState(null);
 
-	return (
-		<div className="App">
-			<Register />
-			<Login />
-			<GameBoard />
-			<button onClick={handleSubmit}>test</button>
-		</div>
-	);
+	if (!userInfo) {
+		return (
+			<div className="App">
+				<Register setUserInfo={setUserInfo} />
+				<Login setUserInfo={setUserInfo} />
+			</div>
+		);
+	} else {
+		return <GameBoard />;
+	}
 }
 
 /*
