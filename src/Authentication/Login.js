@@ -14,7 +14,7 @@ function Login({ setUserInfo }) {
 
 		console.log(data);
 		if (data.length !== 0) {
-			setUserInfo(data);
+			setUserInfo(data[0]);
 		}
 		event.target.elements.username.value = '';
 		event.target.elements.password.value = '';
