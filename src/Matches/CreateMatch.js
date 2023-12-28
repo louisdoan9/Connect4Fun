@@ -1,4 +1,4 @@
-import supabase from './supabaseClient';
+import supabase from '../supabaseClient';
 
 function CreateMatch({ username }) {
 	async function handleSubmit(event) {

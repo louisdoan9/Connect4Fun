@@ -1,6 +1,7 @@
 import Register from './Authentication/Register';
 import Login from './Authentication/Login';
-import CreateMatch from './CreateMatch';
+import CreateMatch from './Matches/CreateMatch';
+import MatchesList from './Matches/MatchesList';
 import { useState } from 'react';
 
 function App() {
@@ -14,7 +15,12 @@ function App() {
 			</div>
 		);
 	} else {
-		return <CreateMatch username={userInfo.username} />;
+		return (
+			<div>
+				<CreateMatch username={userInfo.username} />
+				<MatchesList username={userInfo.username} />
+			</div>
+		);
 	}
 }
 

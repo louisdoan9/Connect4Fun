@@ -12,7 +12,6 @@ function Login({ setUserInfo }) {
 			.eq('username', username)
 			.eq('password', password);
 
-		console.log(data);
 		if (data.length !== 0) {
 			setUserInfo(data[0]);
 		}
