@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 function App() {
 	const [userInfo, setUserInfo] = useState(null);
+	const [currentMatch, setCurrentMatch] = useState(null);
 
 	if (!userInfo) {
 		return (
@@ -17,8 +18,8 @@ function App() {
 	} else {
 		return (
 			<div>
-				<CreateMatch username={userInfo.username} />
-				<MatchesList username={userInfo.username} />
+				<CreateMatch userinfo={userInfo} />
+				<MatchesList userinfo={userInfo} />
 			</div>
 		);
 	}

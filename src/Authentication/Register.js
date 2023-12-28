@@ -6,7 +6,9 @@ function Register() {
 		const username = event.target.elements.username.value;
 		const password = event.target.elements.password.value;
 
-		const { data, error } = await supabase.from('users').insert([{ username: username, password: password }]);
+		const { data, error } = await supabase
+			.from('users')
+			.insert([{ username: username, password: password, matches: JSON.stringify([]) }]);
 		event.target.elements.username.value = '';
 		event.target.elements.password.value = '';
 	}
