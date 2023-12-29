@@ -3,11 +3,11 @@ import Register from './Authentication/Register';
 import Login from './Authentication/Login';
 import CreateMatch from './Matches/CreateMatch';
 import MatchesList from './Matches/MatchesList';
+import UserMatches from './UserMatches/UserMatches';
 import { useState, useEffect } from 'react';
 
 function App() {
 	const [userInfo, setUserInfo] = useState(null);
-	const [currentMatch, setCurrentMatch] = useState(null);
 	const [matches, setMatches] = useState([]);
 
 	useEffect(() => {
@@ -48,6 +48,7 @@ function App() {
 			<div>
 				<CreateMatch userinfo={userInfo} />
 				<MatchesList userinfo={userInfo} matches={matches} />
+				<UserMatches userinfo={userInfo} matches={matches} />
 			</div>
 		);
 	}
