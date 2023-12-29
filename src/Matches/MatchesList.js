@@ -1,20 +1,7 @@
 import { useEffect, useState } from 'react';
 import supabase from '../supabaseClient';
 
-function MatchesList({ userinfo }) {
-	const [matches, setMatches] = useState([]);
-
-	useEffect(() => {
-		if (matches.length === 0) {
-			fetchAllMatches();
-		}
-	}, [matches]);
-
-	async function fetchAllMatches() {
-		const { data } = await supabase.from('matches').select();
-		setMatches(data);
-	}
-
+function MatchesList({ userinfo, matches }) {
 	async function getUsersData() {
 		const { data } = await supabase.from('users').select().eq('id', userinfo.id);
 		return data[0];
@@ -27,14 +14,17 @@ function MatchesList({ userinfo }) {
 		const userData = await getUsersData();
 
 		// if "player1" spot is empty, user joins as player1
-		if (matchData.player1 === null) {
+		if (matchData.player1 === null && matchData.player2 !== userinfo.username) {
 			await supabase.from('matches').update({ player1: userinfo.username }).eq('id', id);
+			// if user is added to the match, add match to user's array of matches
+			await supabase
+				.from('users')
+				.update({ matches: JSON.stringify([...JSON.parse(userData.matches), id]) })
+				.eq('id', userinfo.id);
 		}
 		// if "player2" spot is empty, user joins as player12
-		else if (matchData.player2 === null) {
+		else if (matchData.player2 === null && matchData.player1 !== userinfo.username) {
 			await supabase.from('matches').update({ player2: userinfo.username }).eq('id', id);
-		}
-		if (matchData.player1 === null || matchData.player2 === null) {
 			// if user is added to the match, add match to user's array of matches
 			await supabase
 				.from('users')

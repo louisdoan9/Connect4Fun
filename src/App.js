@@ -1,12 +1,40 @@
+import supabase from './supabaseClient';
 import Register from './Authentication/Register';
 import Login from './Authentication/Login';
 import CreateMatch from './Matches/CreateMatch';
 import MatchesList from './Matches/MatchesList';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function App() {
 	const [userInfo, setUserInfo] = useState(null);
 	const [currentMatch, setCurrentMatch] = useState(null);
+	const [matches, setMatches] = useState([]);
+
+	useEffect(() => {
+		if (matches.length === 0) {
+			fetchAllMatches();
+		}
+	}, [matches]);
+
+	const channel = supabase
+		.channel('table_db_changes')
+		.on(
+			'postgres_changes',
+			{
+				event: '*',
+				schema: 'public',
+				table: 'matches',
+			},
+			(payload) => {
+				fetchAllMatches();
+			}
+		)
+		.subscribe();
+
+	async function fetchAllMatches() {
+		const { data } = await supabase.from('matches').select();
+		setMatches(data);
+	}
 
 	if (!userInfo) {
 		return (
@@ -19,7 +47,7 @@ function App() {
 		return (
 			<div>
 				<CreateMatch userinfo={userInfo} />
-				<MatchesList userinfo={userInfo} />
+				<MatchesList userinfo={userInfo} matches={matches} />
 			</div>
 		);
 	}
