@@ -1,16 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-function GameBoard() {
+function GameBoard({ match }) {
 	const [currentPlayer, setCurrentPlayer] = useState(true);
 	const [gameStatus, setGameStatus] = useState(true);
-	const [board, setBoard] = useState([
-		[null, null, null, null, null, null, null],
-		[null, null, null, null, null, null, null],
-		[null, null, null, null, null, null, null],
-		[null, null, null, null, null, null, null],
-		[null, null, null, null, null, null, null],
-		[null, null, null, null, null, null, null],
-	]);
+	const [board, setBoard] = useState(JSON.parse(match.board));
+
+	useEffect(() => {
+		setBoard(JSON.parse(match.board));
+	}, [match]);
 
 	function resetBoard() {
 		setBoard([
@@ -123,6 +120,10 @@ function GameBoard() {
 
 	return (
 		<div className="game">
+			<h1>{match.match_name}</h1>
+			<h2>
+				{match.player1} vs {match.player2}
+			</h2>
 			<div className="board">
 				{board.map((row) => {
 					return (

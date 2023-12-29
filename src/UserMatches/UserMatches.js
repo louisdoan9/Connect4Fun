@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import supabase from '../supabaseClient';
+import GameBoard from '../GameBoard';
 
 function UserMatches({ userinfo, matches }) {
 	const [userMatches, setUserMatches] = useState([]);
+	const [currentMatch, setCurrentMatch] = useState(null);
 
 	useEffect(() => {
 		let array = [];
@@ -22,10 +23,17 @@ function UserMatches({ userinfo, matches }) {
 				return (
 					<div>
 						<h2>{match.match_name}</h2>
-						<button>Play</button>
+						<button
+							onClick={() => {
+								setCurrentMatch(match);
+							}}
+						>
+							Play
+						</button>
 					</div>
 				);
 			})}
+			{currentMatch !== null ? <GameBoard match={currentMatch} /> : ''}
 		</div>
 	);
 }
