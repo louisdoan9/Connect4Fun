@@ -2,7 +2,8 @@ import supabase from '../supabaseClient';
 
 function CreateMatch({ userinfo }) {
 	async function createMatch(match_name) {
-		const { data, error } = await supabase
+		// insert new match into DB
+		const { data } = await supabase
 			.from('matches')
 			.upsert([
 				{
@@ -21,21 +22,24 @@ function CreateMatch({ userinfo }) {
 				},
 			])
 			.select();
-		return data[0].id;
+		return data[0].id; // returns id
 	}
 
 	async function handleSubmit(event) {
 		event.preventDefault();
 		const match_name = event.target.elements.chatname.value;
 
-		const matchId = await createMatch(match_name);
+		// create match
+		const createdMatchId = await createMatch(match_name);
 
-		const { data, error2 } = await supabase.from('users').select().eq('id', userinfo.id);
-		console.log(data);
+		// get user's updated matches array
+		const { data } = await supabase.from('users').select().eq('id', userinfo.id);
+		const updatedUserMatches = JSON.parse(data[0].matches);
 
-		const { error3 } = await supabase
+		// add newly created match to user's matches array
+		await supabase
 			.from('users')
-			.update({ matches: JSON.stringify([...JSON.parse(data[0].matches), matchId]) })
+			.update({ matches: JSON.stringify([...updatedUserMatches, createdMatchId]) })
 			.eq('id', userinfo.id);
 
 		event.target.elements.chatname.value = '';

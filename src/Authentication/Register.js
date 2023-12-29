@@ -1,20 +1,21 @@
 import supabase from '../supabaseClient';
 
 function Register() {
-	async function handleSubmit(event) {
+	async function registerUser(event) {
 		event.preventDefault();
 		const username = event.target.elements.username.value;
 		const password = event.target.elements.password.value;
 
-		const { data, error } = await supabase
+		await supabase
 			.from('users')
 			.insert([{ username: username, password: password, matches: JSON.stringify([]) }]);
+
 		event.target.elements.username.value = '';
 		event.target.elements.password.value = '';
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form onSubmit={registerUser}>
 			<label htmlFor="username">Username</label>
 			<input id="username" name="username" />
 			<label htmlFor="password">Username</label>

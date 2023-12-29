@@ -4,37 +4,41 @@ import supabase from '../supabaseClient';
 function MatchesList({ userinfo }) {
 	const [matches, setMatches] = useState([]);
 
-	async function fetchMatches() {
-		const { data, error } = await supabase.from('matches').select();
-		setMatches(data);
-	}
-
 	useEffect(() => {
 		if (matches.length === 0) {
-			fetchMatches();
+			fetchAllMatches();
 		}
 	}, [matches]);
 
-	async function getPlayerData() {
-		const { data, error2 } = await supabase.from('users').select().eq('id', userinfo.id);
+	async function fetchAllMatches() {
+		const { data } = await supabase.from('matches').select();
+		setMatches(data);
+	}
+
+	async function getUsersData() {
+		const { data } = await supabase.from('users').select().eq('id', userinfo.id);
 		return data[0];
 	}
 
 	async function joinMatch(id) {
-		const { data, error1 } = await supabase.from('matches').select().eq('id', id);
-		const playerData = await getPlayerData();
-		console.log(playerData);
-		if (data[0].player1 === null) {
-			const { error3 } = await supabase.from('matches').update({ player1: userinfo.username }).eq('id', id);
-			const { error4 } = await supabase
+		// get data of match to join and player data
+		const { data } = await supabase.from('matches').select().eq('id', id);
+		const matchData = data[0];
+		const userData = await getUsersData();
+
+		// if "player1" spot is empty, user joins as player1
+		if (matchData.player1 === null) {
+			await supabase.from('matches').update({ player1: userinfo.username }).eq('id', id);
+		}
+		// if "player2" spot is empty, user joins as player12
+		else if (matchData.player2 === null) {
+			await supabase.from('matches').update({ player2: userinfo.username }).eq('id', id);
+		}
+		if (matchData.player1 === null || matchData.player2 === null) {
+			// if user is added to the match, add match to user's array of matches
+			await supabase
 				.from('users')
-				.update({ matches: JSON.stringify([...JSON.parse(playerData.matches), id]) })
-				.eq('id', userinfo.id);
-		} else if (data[0].player2 === null) {
-			const { error4 } = await supabase.from('matches').update({ player2: userinfo.username }).eq('id', id);
-			const { error5 } = await supabase
-				.from('users')
-				.update({ matches: JSON.stringify([...JSON.parse(playerData.matches), id]) })
+				.update({ matches: JSON.stringify([...JSON.parse(userData.matches), id]) })
 				.eq('id', userinfo.id);
 		}
 	}
