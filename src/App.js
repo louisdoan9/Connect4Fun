@@ -26,6 +26,7 @@ function App() {
 				table: 'matches',
 			},
 			(payload) => {
+				console.log('fetch');
 				fetchAllMatches();
 			}
 		)
@@ -48,7 +49,7 @@ function App() {
 			<div>
 				<CreateMatch userinfo={userInfo} />
 				<MatchesList userinfo={userInfo} matches={matches} />
-				<UserMatches userinfo={userInfo} matches={matches} />
+				<UserMatches userinfo={userInfo} matches={matches} fetchAllMatches={fetchAllMatches} />
 			</div>
 		);
 	}

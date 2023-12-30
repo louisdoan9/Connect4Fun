@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import GameBoard from '../GameBoard';
+import supabase from '../supabaseClient';
 
-function UserMatches({ userinfo, matches }) {
+function UserMatches({ userinfo, matches, fetchAllMatches }) {
 	const [userMatches, setUserMatches] = useState([]);
 	const [currentMatch, setCurrentMatch] = useState(null);
 
@@ -14,8 +15,30 @@ function UserMatches({ userinfo, matches }) {
 		}
 
 		setUserMatches(array);
-		console.log(array);
 	}, [matches, userinfo.username]);
+
+	const channel = supabase
+		.channel('table_db_changes')
+		.on(
+			'postgres_changes',
+			{
+				event: '*',
+				schema: 'public',
+				table: 'matches',
+			},
+			(payload) => {
+				console.log('fetch2');
+				fetchAllMatches();
+				if (currentMatch !== null) {
+					if (payload.new.id === currentMatch.id) {
+						const x = JSON.stringify(payload.new.board);
+						payload.new.board = x;
+						setCurrentMatch(payload.new);
+					}
+				}
+			}
+		)
+		.subscribe();
 
 	return (
 		<div>
@@ -33,7 +56,7 @@ function UserMatches({ userinfo, matches }) {
 					</div>
 				);
 			})}
-			{currentMatch !== null ? <GameBoard match={currentMatch} /> : ''}
+			{currentMatch !== null ? <GameBoard userinfo={userinfo} match={currentMatch} /> : ''}
 		</div>
 	);
 }

@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
+import supabase from './supabaseClient';
 
-function GameBoard({ match }) {
-	const [currentPlayer, setCurrentPlayer] = useState(true);
+function GameBoard({ userinfo, match }) {
+	const [currentPlayer, setCurrentPlayer] = useState(match.currentPlayer);
 	const [gameStatus, setGameStatus] = useState(true);
 	const [board, setBoard] = useState(JSON.parse(match.board));
 
 	useEffect(() => {
 		setBoard(JSON.parse(match.board));
+		setCurrentPlayer(match.currentPlayer);
 	}, [match]);
 
 	function resetBoard() {
@@ -22,8 +24,8 @@ function GameBoard({ match }) {
 		setGameStatus(true);
 	}
 
-	function addToColumn(column) {
-		if (!gameStatus) {
+	async function addToColumn(column) {
+		if (!gameStatus || userinfo.username !== currentPlayer) {
 			return;
 		}
 		let newBoard = [...board];
@@ -34,13 +36,25 @@ function GameBoard({ match }) {
 				return null;
 			}
 		}
-		newBoard[i][column] = currentPlayer ? 'x' : 'o';
+		newBoard[i][column] = userinfo.username === match.player1 ? 'x' : 'o';
 		setBoard(newBoard);
 		if (checkWin()) {
 			setGameStatus(false);
 		} else {
-			setCurrentPlayer(!currentPlayer);
+			if (userinfo.username === match.player1) {
+				setCurrentPlayer(match.player2);
+			} else {
+				setCurrentPlayer(match.player1);
+			}
 		}
+
+		await supabase
+			.from('matches')
+			.update({
+				currentPlayer: userinfo.username === match.player1 ? match.player2 : match.player1,
+				board: JSON.stringify(board),
+			})
+			.eq('id', match.id);
 	}
 
 	function checkEqual(a, b, c, d) {
@@ -142,8 +156,8 @@ function GameBoard({ match }) {
 					);
 				})}
 			</div>
-			<h1>Player {currentPlayer ? '1' : '2'}'s turn</h1>
-			{!gameStatus ? <h2>{currentPlayer ? 'Player 1' : 'Player 2'} Won</h2> : ''}
+			<h1>{currentPlayer}'s turn</h1>
+			{!gameStatus ? <h2>{currentPlayer} Won</h2> : ''}
 			<h3 onClick={resetBoard}>Reset</h3>
 		</div>
 	);
