@@ -27,7 +27,6 @@ function UserMatches({ userinfo, matches, fetchAllMatches }) {
 				table: 'matches',
 			},
 			(payload) => {
-				console.log('fetch2');
 				fetchAllMatches();
 				if (currentMatch !== null) {
 					if (payload.new.id === currentMatch.id) {

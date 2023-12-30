@@ -11,21 +11,28 @@ function GameBoard({ userinfo, match }) {
 		setCurrentPlayer(match.currentPlayer);
 	}, [match]);
 
-	function resetBoard() {
-		setBoard([
-			[null, null, null, null, null, null, null],
-			[null, null, null, null, null, null, null],
-			[null, null, null, null, null, null, null],
-			[null, null, null, null, null, null, null],
-			[null, null, null, null, null, null, null],
-			[null, null, null, null, null, null, null],
-		]);
-		setCurrentPlayer(true);
+	async function resetBoard() {
 		setGameStatus(true);
+
+		await supabase
+			.from('matches')
+			.update({
+				currentPlayer: match.player1,
+				board: JSON.stringify([
+					[null, null, null, null, null, null, null],
+					[null, null, null, null, null, null, null],
+					[null, null, null, null, null, null, null],
+					[null, null, null, null, null, null, null],
+					[null, null, null, null, null, null, null],
+					[null, null, null, null, null, null, null],
+				]),
+				winner: null,
+			})
+			.eq('id', match.id);
 	}
 
 	async function addToColumn(column) {
-		if (!gameStatus || userinfo.username !== currentPlayer) {
+		if (checkWin() || userinfo.username !== currentPlayer || match.winner !== null) {
 			return;
 		}
 		let newBoard = [...board];
@@ -39,22 +46,22 @@ function GameBoard({ userinfo, match }) {
 		newBoard[i][column] = userinfo.username === match.player1 ? 'x' : 'o';
 		setBoard(newBoard);
 		if (checkWin()) {
-			setGameStatus(false);
+			await supabase
+				.from('matches')
+				.update({
+					board: JSON.stringify(board),
+					winner: userinfo.username,
+				})
+				.eq('id', match.id);
 		} else {
-			if (userinfo.username === match.player1) {
-				setCurrentPlayer(match.player2);
-			} else {
-				setCurrentPlayer(match.player1);
-			}
+			await supabase
+				.from('matches')
+				.update({
+					currentPlayer: userinfo.username === match.player1 ? match.player2 : match.player1,
+					board: JSON.stringify(board),
+				})
+				.eq('id', match.id);
 		}
-
-		await supabase
-			.from('matches')
-			.update({
-				currentPlayer: userinfo.username === match.player1 ? match.player2 : match.player1,
-				board: JSON.stringify(board),
-			})
-			.eq('id', match.id);
 	}
 
 	function checkEqual(a, b, c, d) {
@@ -157,7 +164,7 @@ function GameBoard({ userinfo, match }) {
 				})}
 			</div>
 			<h1>{currentPlayer}'s turn</h1>
-			{!gameStatus ? <h2>{currentPlayer} Won</h2> : ''}
+			{match.winner ? <h2>{match.winner} Won</h2> : ''}
 			<h3 onClick={resetBoard}>Reset</h3>
 		</div>
 	);
