@@ -1,19 +1,18 @@
 import { useEffect, useState } from 'react';
-import supabase from './supabaseClient';
+import supabase from '../supabaseClient';
 
 function GameBoard({ userinfo, match }) {
 	const [currentPlayer, setCurrentPlayer] = useState(match.currentPlayer);
-	const [gameStatus, setGameStatus] = useState(true);
 	const [board, setBoard] = useState(JSON.parse(match.board));
 
+	// set board and current player info according to match
 	useEffect(() => {
 		setBoard(JSON.parse(match.board));
 		setCurrentPlayer(match.currentPlayer);
 	}, [match]);
 
+	// reset match board, update DB
 	async function resetBoard() {
-		setGameStatus(true);
-
 		await supabase
 			.from('matches')
 			.update({
@@ -31,20 +30,31 @@ function GameBoard({ userinfo, match }) {
 			.eq('id', match.id);
 	}
 
+	// add a piece to a column, check win and update DB
 	async function addToColumn(column) {
-		if (checkWin() || userinfo.username !== currentPlayer || match.winner !== null) {
+		// return if not user's turn or there is a match winner
+		if (
+			userinfo.username !== currentPlayer ||
+			match.winner !== null ||
+			match.player1 === null ||
+			match.player2 === null
+		) {
 			return;
 		}
+
+		// place piece in first unoccupied row from the bottom
 		let newBoard = [...board];
-		let i = 5;
+		let i = 5; // number of rows (0 indexed)
 		while (newBoard[i][column] != null) {
 			i--;
 			if (i === -1) {
-				return null;
+				return null; // entire column is occupied
 			}
 		}
 		newBoard[i][column] = userinfo.username === match.player1 ? 'x' : 'o';
 		setBoard(newBoard);
+
+		// if there is a win, update the board and winner in DB
 		if (checkWin()) {
 			await supabase
 				.from('matches')
@@ -53,7 +63,8 @@ function GameBoard({ userinfo, match }) {
 					winner: userinfo.username,
 				})
 				.eq('id', match.id);
-		} else {
+		} // if there is no win, update the board and current player in DB
+		else {
 			await supabase
 				.from('matches')
 				.update({
@@ -64,6 +75,7 @@ function GameBoard({ userinfo, match }) {
 		}
 	}
 
+	// check if 4 spots are equal
 	function checkEqual(a, b, c, d) {
 		if (a === b && b === c && c === d && a !== null) {
 			return true;
@@ -78,7 +90,6 @@ function GameBoard({ userinfo, match }) {
 		let row = 0;
 		while (row <= 5 && col <= 3) {
 			if (checkEqual(board[row][col], board[row][col + 1], board[row][col + 2], board[row][col + 3])) {
-				console.log('win');
 				return true;
 			} else {
 				col++;
@@ -88,12 +99,12 @@ function GameBoard({ userinfo, match }) {
 				}
 			}
 		}
+
 		// check horizontal
 		col = 0;
 		row = 0;
 		while (row <= 2 && col <= 6) {
 			if (checkEqual(board[row][col], board[row + 1][col], board[row + 2][col], board[row + 3][col])) {
-				console.log('win 2');
 				return true;
 			} else {
 				col++;
@@ -103,6 +114,7 @@ function GameBoard({ userinfo, match }) {
 				}
 			}
 		}
+
 		// check down right
 		col = 0;
 		row = 0;
@@ -110,7 +122,6 @@ function GameBoard({ userinfo, match }) {
 			if (
 				checkEqual(board[row][col], board[row + 1][col + 1], board[row + 2][col + 2], board[row + 3][col + 3])
 			) {
-				console.log('win 3');
 				return true;
 			} else {
 				col++;
@@ -120,6 +131,7 @@ function GameBoard({ userinfo, match }) {
 				}
 			}
 		}
+
 		// check down left
 		col = 3;
 		row = 0;
@@ -127,7 +139,6 @@ function GameBoard({ userinfo, match }) {
 			if (
 				checkEqual(board[row][col], board[row + 1][col - 1], board[row + 2][col - 2], board[row + 3][col - 3])
 			) {
-				console.log('win 4');
 				return true;
 			} else {
 				col++;

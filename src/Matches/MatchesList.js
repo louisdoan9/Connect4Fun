@@ -1,35 +1,32 @@
-import { useEffect, useState } from 'react';
 import supabase from '../supabaseClient';
 
-function MatchesList({ userinfo, matches }) {
-	async function getUsersData() {
-		const { data } = await supabase.from('users').select().eq('id', userinfo.id);
-		return data[0];
-	}
-
+function MatchesList({ userinfo, matches, fetchAllMatches }) {
 	async function joinMatch(id) {
 		// get data of match to join and player data
-		const { data } = await supabase.from('matches').select().eq('id', id);
-		const matchData = data[0];
-		const userData = await getUsersData();
+		const { data: data1 } = await supabase.from('matches').select().eq('id', id);
+		const { data: data2 } = await supabase.from('users').select().eq('id', userinfo.id);
+		const matchData = data1[0];
+		const updatedUserMatches = JSON.parse(data2[0].matches);
 
+		let f = false;
 		// if "player1" spot is empty, user joins as player1
 		if (matchData.player1 === null && matchData.player2 !== userinfo.username) {
 			await supabase.from('matches').update({ player1: userinfo.username }).eq('id', id);
-			// if user is added to the match, add match to user's array of matches
-			await supabase
-				.from('users')
-				.update({ matches: JSON.stringify([...JSON.parse(userData.matches), id]) })
-				.eq('id', userinfo.id);
+			f = true;
 		}
-		// if "player2" spot is empty, user joins as player12
+		// if "player2" spot is empty, user joins as player2
 		else if (matchData.player2 === null && matchData.player1 !== userinfo.username) {
 			await supabase.from('matches').update({ player2: userinfo.username }).eq('id', id);
-			// if user is added to the match, add match to user's array of matches
+			f = true;
+		}
+
+		// if user is added to the match, add match to user's array of matches, fetch updated matches
+		if (f) {
 			await supabase
 				.from('users')
-				.update({ matches: JSON.stringify([...JSON.parse(userData.matches), id]) })
+				.update({ matches: JSON.stringify([...updatedUserMatches, id]) })
 				.eq('id', userinfo.id);
+			await fetchAllMatches();
 		}
 	}
 

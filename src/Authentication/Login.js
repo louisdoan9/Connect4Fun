@@ -6,6 +6,7 @@ function Login({ setUserInfo }) {
 		const username = event.target.elements.username.value;
 		const password = event.target.elements.password.value;
 
+		// get user data corresponding to inputted username, password
 		const { data } = await supabase.from('users').select().eq('username', username).eq('password', password);
 		if (data.length !== 0) {
 			setUserInfo(data[0]);

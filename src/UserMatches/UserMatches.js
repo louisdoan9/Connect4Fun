@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
-import GameBoard from '../GameBoard';
+import GameBoard from './GameBoard';
 import supabase from '../supabaseClient';
 
 function UserMatches({ userinfo, matches, fetchAllMatches }) {
 	const [userMatches, setUserMatches] = useState([]);
 	const [currentMatch, setCurrentMatch] = useState(null);
 
+	// parses through all matches for matches user is apart of
 	useEffect(() => {
-		let array = [];
+		let userMatches = [];
 		for (const match of matches) {
 			if (match.player1 === userinfo.username || match.player2 === userinfo.username) {
-				array.push(match);
+				userMatches.push(match);
 			}
 		}
-
-		setUserMatches(array);
+		setUserMatches(userMatches);
 	}, [matches, userinfo.username]);
 
+	// if DB changed the current matches info, update it
 	const channel = supabase
 		.channel('table_db_changes')
 		.on(
@@ -27,11 +28,9 @@ function UserMatches({ userinfo, matches, fetchAllMatches }) {
 				table: 'matches',
 			},
 			(payload) => {
-				fetchAllMatches();
 				if (currentMatch !== null) {
 					if (payload.new.id === currentMatch.id) {
-						const x = JSON.stringify(payload.new.board);
-						payload.new.board = x;
+						payload.new.board = JSON.stringify(payload.new.board);
 						setCurrentMatch(payload.new);
 					}
 				}
@@ -55,6 +54,7 @@ function UserMatches({ userinfo, matches, fetchAllMatches }) {
 					</div>
 				);
 			})}
+			{/* display current match using GameBoard */}
 			{currentMatch !== null ? <GameBoard userinfo={userinfo} match={currentMatch} /> : ''}
 		</div>
 	);

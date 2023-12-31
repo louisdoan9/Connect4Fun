@@ -6,6 +6,7 @@ function Register() {
 		const username = event.target.elements.username.value;
 		const password = event.target.elements.password.value;
 
+		// insert inputted username, password into DB
 		await supabase
 			.from('users')
 			.insert([{ username: username, password: password, matches: JSON.stringify([]) }]);
