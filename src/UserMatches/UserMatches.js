@@ -60,7 +60,10 @@ function UserMatches({ userinfo, matches, fetchAllMatches }) {
 			if (matchData.player2 === null) {
 				await supabase.from('matches').delete().eq('id', id);
 			} else {
-				await supabase.from('matches').update({ player1: null, winner: matchData.player2 }).eq('id', id);
+				await supabase
+					.from('matches')
+					.update({ player1: null, winner: matchData.winner === null ? matchData.player2 : matchData.winner })
+					.eq('id', id);
 			}
 		}
 		// if user is player2, set player2 to null
@@ -68,7 +71,10 @@ function UserMatches({ userinfo, matches, fetchAllMatches }) {
 			if (matchData.player1 === null) {
 				await supabase.from('matches').delete().eq('id', id);
 			} else {
-				await supabase.from('matches').update({ player2: null, winner: matchData.player1 }).eq('id', id);
+				await supabase
+					.from('matches')
+					.update({ player2: null, winner: matchData.winner === null ? matchData.player1 : matchData.winner })
+					.eq('id', id);
 			}
 		}
 
