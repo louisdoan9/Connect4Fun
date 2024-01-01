@@ -18,7 +18,7 @@ function App() {
 	// fetch matches listing on load
 	useEffect(() => {
 		fetchAllMatches();
-	}, []);
+	}, [userInfo]);
 
 	if (!userInfo) {
 		return (

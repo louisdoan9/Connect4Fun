@@ -5,6 +5,10 @@ function MatchesList({ userinfo, matches, fetchAllMatches }) {
 		// get data of match to join and player data
 		const { data: data1 } = await supabase.from('matches').select().eq('id', id);
 		const { data: data2 } = await supabase.from('users').select().eq('id', userinfo.id);
+		if (data1.length === 0) {
+			fetchAllMatches();
+			return; // match was deleted
+		}
 		const matchData = data1[0];
 		const updatedUserMatches = JSON.parse(data2[0].matches);
 
