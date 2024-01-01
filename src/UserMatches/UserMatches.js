@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import GameBoard from './GameBoard';
 import supabase from '../supabaseClient';
 
-function UserMatches({ userinfo, matches, fetchAllMatches }) {
+function UserMatches({ userinfo, matches }) {
 	const [userMatches, setUserMatches] = useState([]);
 	const [currentMatch, setCurrentMatch] = useState(null);
 
@@ -28,12 +28,22 @@ function UserMatches({ userinfo, matches, fetchAllMatches }) {
 				table: 'matches',
 			},
 			(payload) => {
-				if (currentMatch !== null) {
-					if (payload.new.id === currentMatch.id) {
+				let updatedMatches = [];
+				for (const match of userMatches) {
+					// if one of user's matches was updated, update it in userMatches
+					if (payload.new.id === match.id) {
 						payload.new.board = JSON.stringify(payload.new.board);
-						setCurrentMatch(payload.new);
+						updatedMatches.push(payload.new);
+
+						// if it is also the current match, update currentMatch
+						if (payload.new.id === currentMatch?.id) {
+							setCurrentMatch(payload.new);
+						}
+					} else {
+						updatedMatches.push(match);
 					}
 				}
+				setUserMatches(updatedMatches);
 			}
 		)
 		.subscribe();
