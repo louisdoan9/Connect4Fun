@@ -1,4 +1,5 @@
 import supabase from '../supabaseClient';
+import './authentication.css';
 
 function Login({ setUserInfo }) {
 	async function loginUser(event) {
@@ -17,13 +18,20 @@ function Login({ setUserInfo }) {
 	}
 
 	return (
-		<form onSubmit={loginUser}>
-			<label htmlFor="username">Username</label>
-			<input id="username" name="username" />
-			<label htmlFor="password">Username</label>
-			<input id="password" name="password" />
-			<button type="submit">Submit</button>
-		</form>
+		<div>
+			<p>Login</p>
+			<form onSubmit={loginUser}>
+				<div>
+					<label htmlFor="username">Username</label>
+					<input id="username" name="username" />
+				</div>
+				<div>
+					<label htmlFor="password">Password</label>
+					<input id="password" name="password" />
+				</div>
+				<button type="submit">Submit</button>
+			</form>
+		</div>
 	);
 }
 

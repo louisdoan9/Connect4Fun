@@ -22,7 +22,7 @@ function App() {
 
 	if (!userInfo) {
 		return (
-			<div className="App">
+			<div className="authentication">
 				<Register setUserInfo={setUserInfo} />
 				<Login setUserInfo={setUserInfo} />
 			</div>
