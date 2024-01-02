@@ -48,11 +48,14 @@ function CreateMatch({ userinfo, fetchAllMatches }) {
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<label htmlFor="chatname">Name of match</label>
-			<input id="chatname" name="chatname" />
-			<button type="submit">Submit</button>
-		</form>
+		<div className="create-match-form">
+			<form onSubmit={handleSubmit}>
+				<label htmlFor="chatname">Name of match</label>
+				<input id="chatname" name="chatname" />
+				<button type="submit">Create Match</button>
+			</form>
+			<button onClick={fetchAllMatches}>Reload Matches</button>
+		</div>
 	);
 }
 

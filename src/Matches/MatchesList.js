@@ -1,6 +1,7 @@
 import supabase from '../supabaseClient';
+import GameBoard from '../UserMatches/GameBoard';
 
-function MatchesList({ userinfo, matches, fetchAllMatches }) {
+function MatchesList({ userinfo, matches, fetchAllMatches, currentMatch, setCurrentMatch }) {
 	async function joinMatch(id) {
 		// get data of match to join and player data
 		const { data: data1 } = await supabase.from('matches').select().eq('id', id);
@@ -35,21 +36,36 @@ function MatchesList({ userinfo, matches, fetchAllMatches }) {
 	}
 
 	return (
-		<div>
-			{matches.map((match) => {
-				return (
-					<div>
-						<h3>{match.match_name}</h3>
-						<button
-							onClick={() => {
-								joinMatch(match.id);
-							}}
-						>
-							Join match
-						</button>
-					</div>
-				);
-			})}
+		<div className="matches-list">
+			{currentMatch === null ? (
+				<div>
+					{matches.map((match) => {
+						return (
+							<div className="match">
+								<h2>{match.match_name}</h2>
+								<button
+									onClick={() => {
+										joinMatch(match.id);
+									}}
+								>
+									Join match
+								</button>
+							</div>
+						);
+					})}
+				</div>
+			) : (
+				<div>
+					<button
+						onClick={() => {
+							setCurrentMatch(null);
+						}}
+					>
+						Back
+					</button>
+					<GameBoard userinfo={userinfo} match={currentMatch} />
+				</div>
+			)}
 		</div>
 	);
 }
