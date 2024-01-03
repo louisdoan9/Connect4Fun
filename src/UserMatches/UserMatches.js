@@ -48,7 +48,7 @@ function UserMatches({ userinfo, currentMatch, fetchAllMatches, setCurrentMatch,
 			{userMatches.map((match) => {
 				return (
 					<div className="match">
-						<h2>{match.match_name}</h2>
+						<h3>{match.match_name}</h3>
 						<button
 							onClick={() => {
 								setCurrentMatch(match);

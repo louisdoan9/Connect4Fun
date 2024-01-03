@@ -159,10 +159,13 @@ body {
 						align-items: center;
 					}
 					h1 {
-						margin: 15px 0px;
+						margin: 0px 0px;
 					}
 					h2 {
-						margin: 10px 0px;
+						margin: 0px 0px;
+					}
+					.board {
+						margin-top: 15px;
 					}
 				}
 			}
@@ -173,7 +176,7 @@ body {
 				align-items: center;
 				gap: 10px;
 
-				h2 {
+				h3 {
 					margin-right: auto;
 				}
 				button {
@@ -212,18 +215,11 @@ body {
 			cursor: pointer;
 		}
 
-		.x::after,
-		.o::after {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100%;
+		.x {
+			background-color: #bb4430;
 		}
-		.x::after {
-			content: 'x';
-		}
-		.o::after {
-			content: 'o';
+		.o {
+			background-color: #ffc100;
 		}
 	}
 }

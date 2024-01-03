@@ -160,6 +160,8 @@ function GameBoard({ userinfo, match }) {
 						: '(Waiting for 2nd player...)'}
 				</h1>
 			</div>
+			{match.winner ? <h2>{match.winner} Won!</h2> : <h2>{currentPlayer}'s turn</h2>}
+			{match.winner ? <button onClick={resetBoard}>Reset</button> : ''}
 			<div className="board">
 				{board.map((row) => {
 					return (
@@ -178,8 +180,6 @@ function GameBoard({ userinfo, match }) {
 					);
 				})}
 			</div>
-			{match.winner ? <h2>{match.winner} Won</h2> : <h2>{currentPlayer}'s turn</h2>}
-			{match.winner ? <button onClick={resetBoard}>Reset</button> : ''}
 		</div>
 	);
 }
