@@ -29,12 +29,39 @@ body {
 
 .main {
 	height: 75%;
-	width: 75%;
+	width: 90%;
+	max-width: 900px;
 	display: flex;
 	flex-direction: column;
 	color: white;
 	border: 2px solid white;
 	position: relative;
+
+	@media (max-width: 950px) {
+		.matches-container {
+			flex-direction: column;
+		}
+		.user-matches {
+			width: 100% !important;
+		}
+		.create-match-form {
+			flex-wrap: wrap;
+		}
+	}
+	@media (max-width: 950px) {
+		.create-match-form {
+			align-items: start;
+			flex-direction: column;
+			gap: 20px;
+
+			button {
+				padding: 0px;
+			}
+			form {
+				flex-wrap: wrap;
+			}
+		}
+	}
 
 	.header,
 	.matches-container {
@@ -42,8 +69,11 @@ body {
 		justify-content: space-evenly;
 	}
 	.header {
+		flex-wrap: wrap;
+		padding: 0px 10px;
 		border-bottom: 2px solid white;
 		top: 0px;
+		gap: 10px;
 		position: sticky;
 		background-color: black;
 	}
@@ -57,7 +87,7 @@ body {
 			overflow-y: auto;
 			height: 100%;
 			padding: 10px 20px;
-			width: 50%;
+			width: 40%;
 		}
 		.matches {
 			width: 100%;
@@ -171,6 +201,12 @@ body {
 			width: 40px;
 			height: 40px;
 			border: 1px solid white;
+		}
+		@media (max-width: 950px) {
+			.column {
+				width: 35px;
+				height: 35px;
+			}
 		}
 		.column:hover {
 			cursor: pointer;
