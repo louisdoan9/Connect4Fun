@@ -55,7 +55,7 @@ function MatchesList({ userinfo, matches, fetchAllMatches, currentMatch, setCurr
 					})}
 				</div>
 			) : (
-				<div>
+				<div className="gameboard-display">
 					<button
 						onClick={() => {
 							setCurrentMatch(null);

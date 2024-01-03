@@ -152,10 +152,14 @@ function GameBoard({ userinfo, match }) {
 
 	return (
 		<div className="game">
-			<h1>{match.match_name}</h1>
-			<h2>
-				{match.player1} vs {match.player2}
-			</h2>
+			<div className="game-header">
+				<h1>
+					{match.match_name},{' '}
+					{match.player1 && match.player2
+						? `(${match.player1} vs ${match.player2})`
+						: '(Waiting for 2nd player...)'}
+				</h1>
+			</div>
 			<div className="board">
 				{board.map((row) => {
 					return (
@@ -174,9 +178,8 @@ function GameBoard({ userinfo, match }) {
 					);
 				})}
 			</div>
-			<h1>{currentPlayer}'s turn</h1>
-			{match.winner ? <h2>{match.winner} Won</h2> : ''}
-			<h3 onClick={resetBoard}>Reset</h3>
+			{match.winner ? <h2>{match.winner} Won</h2> : <h2>{currentPlayer}'s turn</h2>}
+			{match.winner ? <button onClick={resetBoard}>Reset</button> : ''}
 		</div>
 	);
 }

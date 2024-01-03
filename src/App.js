@@ -81,7 +81,11 @@ function App() {
 				</div>
 				<div className="matches-container">
 					<div className="matches">
-						<CreateMatch userinfo={userInfo} fetchAllMatches={fetchAllMatches} />
+						{currentMatch === null ? (
+							<CreateMatch userinfo={userInfo} fetchAllMatches={fetchAllMatches} />
+						) : (
+							''
+						)}
 						<MatchesList
 							userinfo={userInfo}
 							matches={matches}

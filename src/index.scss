@@ -48,7 +48,7 @@ body {
 		background-color: black;
 	}
 	.matches-container {
-		padding-top: 20px;
+		padding: 20px 0px;
 		height: 100%;
 		overflow: hidden;
 
@@ -110,6 +110,32 @@ body {
 					text-decoration: underline;
 				}
 			}
+			.matches-list > .gameboard-display {
+				button {
+					height: fit-content;
+					font-size: 16px;
+					color: white;
+					background: none;
+					border: none;
+					padding: 0;
+				}
+				button:hover {
+					text-decoration: underline;
+				}
+
+				.game {
+					.game-header {
+						display: flex;
+						align-items: center;
+					}
+					h1 {
+						margin: 15px 0px;
+					}
+					h2 {
+						margin: 10px 0px;
+					}
+				}
+			}
 		}
 		.user-matches {
 			.match {
@@ -135,28 +161,33 @@ body {
 	}
 }
 
-.row {
-	background-color: white;
-	display: flex;
-	color: black;
-
-	.column {
-		width: 40px;
-		height: 40px;
-		border: 1px solid black;
-	}
-
-	.x::after,
-	.o::after {
+.board {
+	.row {
 		display: flex;
-		justify-content: center;
-		align-items: center;
-		height: 100%;
-	}
-	.x::after {
-		content: 'x';
-	}
-	.o::after {
-		content: 'o';
+		color: white;
+		width: fit-content;
+
+		.column {
+			width: 40px;
+			height: 40px;
+			border: 1px solid white;
+		}
+		.column:hover {
+			cursor: pointer;
+		}
+
+		.x::after,
+		.o::after {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+		}
+		.x::after {
+			content: 'x';
+		}
+		.o::after {
+			content: 'o';
+		}
 	}
 }
