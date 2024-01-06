@@ -28,7 +28,7 @@ body {
 }
 
 .main {
-	height: 75%;
+	height: 85%;
 	width: 90%;
 	max-width: 900px;
 	display: flex;
@@ -70,15 +70,18 @@ body {
 	}
 	.header {
 		flex-wrap: wrap;
-		padding: 0px 10px;
+		padding: 10px;
 		border-bottom: 2px solid white;
 		top: 0px;
 		gap: 10px;
 		position: sticky;
 		background-color: black;
+		h1 {
+			margin: 0px;
+		}
 	}
 	.matches-container {
-		padding: 20px 0px;
+		padding: 0px 0px;
 		height: 100%;
 		overflow: hidden;
 
@@ -86,11 +89,12 @@ body {
 		.user-matches {
 			overflow-y: auto;
 			height: 100%;
-			padding: 10px 20px;
+			padding: 20px;
 			width: 40%;
 		}
 		.matches {
 			width: 100%;
+
 			.create-match-form {
 				display: flex;
 				justify-content: space-between;
@@ -171,6 +175,17 @@ body {
 			}
 		}
 		.user-matches {
+			border-left: 2px solid white;
+
+			@media (max-width: 950px) {
+				height: 50%;
+				border-left: none;
+				border-top: 2px solid white;
+			}
+
+			h2 {
+				margin: 0;
+			}
 			.match {
 				display: flex;
 				align-items: center;
