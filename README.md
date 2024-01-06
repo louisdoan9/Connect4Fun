@@ -18,6 +18,5 @@ https://connect4fun.vercel.app/
 
 ## Screenshots 📸
 
-![App Screenshot 1](./README_images/Screenshot%202024-01-03%20165751.png)
-![App Screenshot 2](./README_images/Screenshot%202024-01-03%20170011.png)
-![App Screenshot 3](./README_images/Screenshot%202024-01-03%20170035.png)
+![App Screenshot 1](./README_images/connect4fun.png)
+![App Screenshot 3](./README_images/connect4fun2.png)
